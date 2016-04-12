@@ -1,1 +1,0 @@
-/usr/bin/c++    -std=c++0x -g    CMakeFiles/NMPC.dir/NMPC.cpp.o  -o ../NMPC -rdynamic /mnt/HDD-home/rien/ACADO/ACADOmaster/build/lib/libacado_toolkit_s.so -Wl,-rpath,/mnt/HDD-home/rien/ACADO/ACADOmaster/build/lib 
