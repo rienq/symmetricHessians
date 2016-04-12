@@ -7,7 +7,6 @@ The code allows one to reconstruct the presented numerical results for the perio
 
 First compile the *master* branch of ACADO which is a submodule of this repository (following the instructions on http://www.acadotoolkit.org).
 To export the C-code, run the following commands:
-mkdir build
 cd build
 cmake ..
 make clean all
