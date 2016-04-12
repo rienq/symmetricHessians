@@ -2,7 +2,7 @@ clc;
 clear all;
 close all;
 
-COMPILE = 0;
+COMPILE = 1;
 
 if COMPILE
     cd mpc_export

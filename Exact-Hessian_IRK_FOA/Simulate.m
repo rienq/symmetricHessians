@@ -2,9 +2,9 @@ clc;
 clear all;
 close all;
 
-EXPORT = 0;
+COMPILE = 1;
 
-if EXPORT
+if COMPILE
     cd mpc_export
     make_rien_solver('../acado_MPCstep')
     cd ..
