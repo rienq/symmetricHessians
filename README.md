@@ -5,21 +5,7 @@ The code allows one to reconstruct the presented numerical results for the perio
 
 ## Instructions
 
-First compile the *master* branch of ACADO which is a submodule of this repository (following the instructions on http://www.acadotoolkit.org).
-
-To export the C-code, run the following commands:
-
-mkdir build
-
-cd build
-
-cmake ..
-
-make clean all
-
-cd ..
-
-./NMPC
+First install the Matlab interface of the ACADO Toolkit which is a submodule of this repository (follow the instructions on http://acado.github.io/matlab_overview.html to install ACADO from its Matlab interface).
 
 
-The generated code can be compiled and the simulations can be run by calling "Simulate.m" in MATLAB.
+The ACADO code can be generated and compiled and the simulations can be run simply by calling "Simulate.m" from Matlab.
