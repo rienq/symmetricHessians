@@ -89,8 +89,8 @@ int dummy;
  */
 typedef struct ACADOworkspace_
 {
-/** Column vector of size: 2 */
-real_t rhs_aux[ 2 ];
+/** Column vector of size: 1 */
+real_t rhs_aux[ 1 ];
 
 real_t rk_ttt;
 

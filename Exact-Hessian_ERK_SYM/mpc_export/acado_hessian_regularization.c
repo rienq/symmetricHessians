@@ -278,7 +278,7 @@ void acado_reconstruct_A(real_t *A, real_t *V, real_t *d) {
 }
 
 /* cutting regularization */
-void acado_regularize(real_t *A) {
+/*void acado_regularize(real_t *A) {
   int i;
   real_t V[DIM*DIM];
   real_t d[DIM];
@@ -290,10 +290,10 @@ void acado_regularize(real_t *A) {
   }
   
   acado_reconstruct_A(A, V, d);
-}
+}*/
 
 /* mirroring regularization */
-/*void acado_regularize(real_t *A) {
+void acado_regularize(real_t *A) {
   int i;
   real_t V[DIM*DIM];
   real_t d[DIM];
@@ -306,4 +306,4 @@ void acado_regularize(real_t *A) {
   }
   
   acado_reconstruct_A(A, V, d);
-}*/
+}

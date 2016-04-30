@@ -24,20 +24,19 @@ void acado_rhs(const real_t* in, real_t* out)
 {
 const real_t* xd = in;
 const real_t* u = in + 6;
-/* Vector of auxiliary variables; number of elements: 2. */
+/* Vector of auxiliary variables; number of elements: 1. */
 real_t* a = acadoWorkspace.rhs_aux;
 
 /* Compute intermediate quantities: */
-a[0] = ((xd[1])*(xd[1]));
-a[1] = ((((real_t)(4.7999999999999998e-01)*((real_t)(1.0000000000000000e+00)-(xd[2]/(real_t)(5.0000000000000000e+01))))*xd[1])/(((real_t)(1.2000000000000000e+00)+xd[1])+(a[0]/(real_t)(2.2000000000000000e+01))));
+a[0] = (((((real_t)(1.0000000000000000e+00)-((real_t)(2.0000000000000000e-02)*xd[2]))/(((real_t)(1.2000000000000000e+00)+(((real_t)(4.5454545454545456e-02)*xd[1])*xd[1]))+xd[1]))*(real_t)(4.7999999999999998e-01))*xd[1]);
 
 /* Compute outputs: */
-out[0] = (((real_t)(-1.4999999999999999e-01)*xd[0])+(a[1]*xd[0]));
-out[1] = (((real_t)(1.4999999999999999e-01)*(u[0]-xd[1]))-((a[1]/(real_t)(4.0000000000000002e-01))*xd[0]));
-out[2] = (((real_t)(-1.4999999999999999e-01)*xd[2])+((((real_t)(2.2000000000000002e+00)*a[1])+(real_t)(2.0000000000000001e-01))*xd[0]));
+out[0] = (((real_t)(-1.4999999999999999e-01)*xd[0])+(xd[0]*a[0]));
+out[1] = (((((real_t)(0.0000000000000000e+00)-xd[1])+u[0])*(real_t)(1.4999999999999999e-01))-(((real_t)(2.5000000000000000e+00)*xd[0])*a[0]));
+out[2] = (((real_t)(-1.4999999999999999e-01)*xd[2])+(((real_t)(2.0000000000000001e-01)+((real_t)(2.2000000000000002e+00)*a[0]))*xd[0]));
 out[3] = xd[0];
 out[4] = u[0];
-out[5] = (((real_t)(1.4999999999999999e-01)*xd[2])/(real_t)(4.8000000000000000e+01));
+out[5] = ((real_t)(3.1249999999999997e-03)*xd[2]);
 }
 
 /* Fixed step size:0.24 */

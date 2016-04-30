@@ -87,7 +87,7 @@ extern "C"
 /** Indicator for usage of non-hard-coded linear terms in the objective. */
 #define ACADO_USE_LINEAR_TERMS 0
 /** Indicator for type of fixed weighting matrices. */
-#define ACADO_WEIGHTING_MATRICES_TYPE 2
+#define ACADO_WEIGHTING_MATRICES_TYPE 1
 
 
 /*
@@ -157,8 +157,8 @@ real_t mu[ 120 ];
  */
 typedef struct ACADOworkspace_
 {
-/** Column vector of size: 281 */
-real_t rhs_aux[ 281 ];
+/** Column vector of size: 280 */
+real_t rhs_aux[ 280 ];
 
 real_t rk_ttt;
 

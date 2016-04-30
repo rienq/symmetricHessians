@@ -87,7 +87,7 @@ extern "C"
 /** Indicator for usage of non-hard-coded linear terms in the objective. */
 #define ACADO_USE_LINEAR_TERMS 0
 /** Indicator for type of fixed weighting matrices. */
-#define ACADO_WEIGHTING_MATRICES_TYPE 2
+#define ACADO_WEIGHTING_MATRICES_TYPE 1
 
 
 /*

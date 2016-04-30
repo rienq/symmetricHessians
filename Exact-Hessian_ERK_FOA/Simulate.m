@@ -2,11 +2,16 @@ clc;
 clear all;
 close all;
 
+GENERATE_CODE = 1;
 COMPILE = 1;
+
+if GENERATE_CODE
+    generate_code
+end
 
 if COMPILE
     cd mpc_export
-    make_rien_solver('../acado_MPCstep')
+    make_acado_solver('../acado_MPCstep')
     cd ..
     cd sim_export
     make_acado_integrator('../acado_simulate')
@@ -20,24 +25,15 @@ Ts = 48/N;
 
 Sfmin   = 28.7;
 Sfmax   = 40.0;
-% Sfbar   = 32.7;
-% Xbarmax = 5.8 ;
 Sfbar   = 33;
 Xbarmax = 5.8 ;
-
-% D = 0.15;
 
 init_states = textread('init_states.txt', '');
 init_controls = textread('init_controls.txt', '');
 
-% X0 = [5.7 13 20 zeros(1,3)];
 X0 = [init_states(1,2:4) zeros(1,3)];
 Xref = [0 0 0 0 0];
 input.x = repmat(X0,N+1,1);
-% for i = 1:size(init_states,1)-1
-%     input.x = [input.x; repmat(init_states(i,2:6),2,1)];
-% end
-% input.x = [input.x; repmat(init_states(end,2:6),1,1)];
 Xref = repmat(Xref,N,1);
 
 input.p = [];
@@ -45,9 +41,6 @@ input.mu = zeros(N,length(X0));
 
 Uref = zeros(N,1);
 input.u = zeros(N,1);
-% for i = 1:size(init_controls,1)-1
-%     input.u = [input.u; repmat(init_controls(i,2),2,1)];
-% end
 
 input.lbValues = Sfmin*ones(N,1);
 input.ubValues = Sfmax*ones(N,1);
@@ -62,7 +55,7 @@ input.x0 = [X0(1:3) zeros(1,3)];
 KKT = 1;
 iter = 0;
 outputs = {};
-while KKT > 1e-14
+while KKT > 1e-13
     output = acado_MPCstep(input);
     
     input.x = output.x;
@@ -103,13 +96,7 @@ controls_MPC = [];
 state_sim = X0;
 
 totalCPU = 0;
-totalMODEL = 0;
-totalCONDENSE = 0;
-totalREGULARIZE = 0;
 totalQP = 0;
-totalSWEEP1 = 0;
-totalSWEEP2 = 0;
-totalSWEEP3 = 0;
 iter = 0;
 % pause
 while time(end) < Tf
@@ -117,7 +104,6 @@ while time(end) < Tf
     tic
     % Solve NMPC OCP
     input.x0 = [state_sim(end,1:3) zeros(1,3)];
-%     input.od = D;
     input.lbAValues = [state_sim(end,1:3).'; 0; 0; 0];
     input.ubAValues = [state_sim(end,1:3).'; 48*Xbarmax; 48*Sfbar; 1e8];
     for i = 1:1
@@ -126,8 +112,6 @@ while time(end) < Tf
         input.x = output.x;
         input.u = output.u;
         input.mu = output.mu;
-        
-%         disp(['RTI step ' num2str(i) ' KKT value: ' num2str(output.info.kktValue)]);
     end
     
     % Save the MPC step
@@ -152,8 +136,6 @@ while time(end) < Tf
         % event on X:
         states.value(1:3) = [6.1 14 21.1].';
         
-%         D = 0.152;
-        
         EVENT = 0;
     end
     state_sim = [state_sim; states.value'];
@@ -167,16 +149,6 @@ while time(end) < Tf
     iter = iter+1;
     
     totalCPU = totalCPU + output.info.cpuTime;
-    totalMODEL = totalMODEL + output.info.modelTime;
-    totalCONDENSE = totalCONDENSE + output.info.condenseTime;
-    totalREGULARIZE = totalREGULARIZE + output.info.regularizeTime;
-    totalQP = totalQP + output.info.qpTime;
-    
-    totalSWEEP1 = totalSWEEP1 + output.info.sweep1Time;
-    totalSWEEP2 = totalSWEEP2 + output.info.sweep2Time;
-    totalSWEEP3 = totalSWEEP3 + output.info.sweep3Time;
-    
-%     pause(abs(Ts-toc));
 end
 
 save ../sim_data.mat state_sim controls_MPC
@@ -184,15 +156,6 @@ save ../sim_data.mat state_sim controls_MPC
 disp('----------------------------------------------');
 disp('----------------------------------------------');
 disp(['AVERAGE RTI step CPU time    : ' num2str(round(1e6*totalCPU/iter)) ' μs']);
-disp('----------------------------------------------');
-disp(['time spent in forward sweep 1  : ' num2str(round(1e6*totalSWEEP1/iter)) ' μs (' num2str(round(100*totalSWEEP1/totalCPU)) '%)']);
-disp(['time spent in backward sweep 2 : ' num2str(round(1e6*totalSWEEP2/iter)) ' μs (' num2str(round(100*totalSWEEP2/totalCPU)) '%)']);
-disp(['time spent in forward sweep 3  : ' num2str(round(1e6*totalSWEEP3/iter)) ' μs (' num2str(round(100*totalSWEEP3/totalCPU)) '%)']);
-disp('----------------------------------------------');
-disp(['time spent in the model      : ' num2str(round(1e6*totalMODEL/iter)) ' μs (' num2str(round(100*totalMODEL/totalCPU)) '%)']);
-disp(['time spent in condensing     : ' num2str(round(1e6*totalCONDENSE/iter)) ' μs (' num2str(round(100*totalCONDENSE/totalCPU)) '%)']);
-disp(['time spent in regularization : ' num2str(round(1e6*totalREGULARIZE/iter)) ' μs (' num2str(round(100*totalREGULARIZE/totalCPU)) '%)']);
-disp(['time spent in QPoases        : ' num2str(round(1e6*totalQP/iter)) ' μs (' num2str(round(100*totalQP/totalCPU)) '%)']);
 disp('----------------------------------------------');
 disp('----------------------------------------------');
 
@@ -208,10 +171,10 @@ U = controls_MPC.';
 TIME = (1:Tf/Ts+1)*Ts;
 TIME = time;
 
-load ../sol_data.mat state_sim controls_MPC
-
-X2 = state_sim.';
-U2 = controls_MPC.';
+% load ../sol_data.mat state_sim controls_MPC
+% 
+% X2 = state_sim.';
+% U2 = controls_MPC.';
 
 D = 0.15;
 
@@ -223,7 +186,7 @@ figure; clf;
         subplot(2,2,plotI(k))
         hold on
             plot(TIME,X(idx(k),:),'k','linewidth',1.6)
-            plot(TIME,X2(idx(k),:),'k:','linewidth',1.6)
+%             plot(TIME,X2(idx(k),:),'k:','linewidth',1.6)
             if k == 1
                 plot([TIME(1) TIME(end)],[Xbarmax Xbarmax],'k--');
             elseif k == 3
@@ -236,7 +199,7 @@ figure; clf;
 subplot(2,2,4)
         stairs(TIME(1:end-1),U(1,:),'k','linewidth',1.6)
     hold on
-        stairs(TIME(1:end-1),U2(1,:),'k:','linewidth',1.6)
+%         stairs(TIME(1:end-1),U2(1,:),'k:','linewidth',1.6)
         plot([TIME(1) TIME(end-1)], [Sfmin Sfmin], 'k--');
         plot([TIME(1) TIME(end-1)], [Sfmax Sfmax], 'k--');
         plot([TIME(1) TIME(end-1)],[Sfbar Sfbar],'k--');

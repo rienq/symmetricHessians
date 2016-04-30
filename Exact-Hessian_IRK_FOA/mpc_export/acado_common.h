@@ -87,7 +87,7 @@ extern "C"
 /** Indicator for usage of non-hard-coded linear terms in the objective. */
 #define ACADO_USE_LINEAR_TERMS 0
 /** Indicator for type of fixed weighting matrices. */
-#define ACADO_WEIGHTING_MATRICES_TYPE 2
+#define ACADO_WEIGHTING_MATRICES_TYPE 1
 
 
 /*
@@ -165,8 +165,8 @@ real_t rk_dim12_bPerm[ 12 ];
 /** Column vector of size: 12 */
 real_t rk_dim12_bPerm_trans[ 12 ];
 
-/** Column vector of size: 155 */
-real_t rhs_aux[ 155 ];
+/** Column vector of size: 123 */
+real_t rhs_aux[ 123 ];
 
 real_t rk_ttt;
 
